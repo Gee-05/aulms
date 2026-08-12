@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+}
+
+/* ---------------------------------------------------------------------- *
+ * Glassmorphism system
+ * A library photo sits behind every screen, sharp (not blurred) so it's
+ * actually visible - the frosted panels floating on top get their own
+ * backdrop-blur to stay legible against it. Light/dark each tune the wash
+ * overlay so text stays legible either way.
+ * ---------------------------------------------------------------------- */
+
+.app-shell-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("/images/library-bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.app-shell-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(248, 250, 252, 0.32) 0%, rgba(248, 250, 252, 0.5) 100%);
+}
+
+:where(.dark) .app-shell-bg::after {
+  background: linear-gradient(160deg, rgba(2, 6, 23, 0.4) 0%, rgba(2, 6, 23, 0.62) 100%);
+}
+
+.auth-shell-bg {
+  background-image:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.75) 100%),
+    url("/images/auth-bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+@layer components {
+  /* Standard content card: dashboards, tables, modals, forms. */
+  .glass-card {
+    @apply rounded-xl border border-white/70 bg-white/60 shadow-lg shadow-slate-900/10 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-900/50 dark:shadow-black/30;
+  }
+
+  /* Chrome surfaces (navbar/sidebar/dropdowns) - lighter than content
+     cards so they read as part of the same glass canvas, not a separate
+     solid bar sitting on top of it. */
+  .glass-chrome {
+    @apply border-white/40 bg-white/35 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/35;
+  }
+
+  /* The frosted login/register card sitting on the full-bleed photo hero. */
+  .glass-auth-card {
+    @apply rounded-xl border border-white/30 bg-white/20 shadow-2xl shadow-black/20 backdrop-blur-2xl dark:border-white/10 dark:bg-slate-950/30;
+  }
+
+  /* Page heading + subtitle pairs that sit directly on the (now sharp,
+     unblurred) background photo rather than inside a glass-card - a plain
+     mid-gray subtitle loses contrast against a busy image, so this pairs a
+     darker/lighter color with a soft text-shadow that holds up regardless
+     of what's behind it. */
+  .page-title {
+    @apply text-2xl font-bold text-slate-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)] dark:text-slate-50 dark:drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)];
+  }
+  .page-subtitle {
+    @apply text-sm font-medium text-slate-700 drop-shadow-[0_1px_2px_rgba(255,255,255,0.6)] dark:text-slate-200 dark:drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)];
+  }
+}
